@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+
+<body>
+    <h1>掌上拉屎————随时随地，想拉就拉</h1>
+    <h1 id="welcome"></h1>
+    <button id="lashi" onclick="lashi()" style="width: 5cap;height: 10cap;">我要拉屎</button>
+    <button id="stoplashi" onclick="stoplashi()" style="width: 5cap;height: 10cap;">我拉完了</button>
+    <button id="register" onclick="javascript:window.location='./pages/register/register.html'"
+        style="width: 5cap;height: 10cap;">注册</button>
+    <button id="login" onclick="javascript:window.location='./pages/login/login.html'"
+        style="width: 5cap;height: 10cap;">登录</button>
+    <script>
+        if (localStorage.params != undefined) {
+            document.getElementById("register").remove(); document.getElementById("login").remove();
+            const param = JSON.parse(localStorage.params);
+            window.param=param;
+            document.getElementById("welcome").innerText = "美丽的一天，从拉屎开始，" + param.username;
+        }
+        function lashi() {
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var raw = JSON.stringify({
+                "username": param.username,
+            });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch("https://95qd9m-3000.csb.app/lashi/", requestOptions)
+                .then(response => response.json())
+                .then((result) => {
+                    console.log(result);
+                    if (result.code == 0) {
+                        alert("申请成功，请您前往马桶处拉屎");
+                    }
+                    else if(result.code == 1){
+                        alert("申请失败，马桶上有人正在拉")
+                    }
+
+                })
+                .catch(error => console.log('error', error));
+        }
+
+        function stoplashi() {
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            var raw = JSON.stringify({
+                "username": param.username,
+            });
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch("https://95qd9m-3000.csb.app/stoplashi/", requestOptions)
+                .then(response => response.json())
+                .then((result) => {
+                    console.log(result);
+                    if (result.code == 0) {
+                        alert("申请成功，请您离开马桶");
+                    }
+                    else if(result.code == 1){
+                        alert("申请失败，你还没开始拉呢")
+                    }
+
+                })
+                .catch(error => console.log('error', error));
+        }
+    </script>
+</body>
